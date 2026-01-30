@@ -1,0 +1,310 @@
+import { useLocalStorage } from "./useLocalStorage";
+import { getDateString, getDayOfWeek } from "@/types/fitness";
+import type {
+  DayRecord,
+  WeeklyPlan,
+  WorkoutTemplate,
+  MealTemplate,
+  UserProfile,
+} from "@/types/fitness";
+import { useCallback } from "react";
+// Generate simple unique IDs
+const generateId = () =>
+  Math.random().toString(36).substring(2, 15) +
+  Math.random().toString(36).substring(2, 15);
+
+const defaultWeeklyPlan: WeeklyPlan = {
+  monday: "workout",
+  tuesday: "workout",
+  wednesday: "rest",
+  thursday: "workout",
+  friday: "workout",
+  saturday: "rest",
+  sunday: "rest",
+};
+
+const defaultWorkoutTemplates: WorkoutTemplate[] = [
+  {
+    id: generateId(),
+    name: "Push Day",
+    dayOfWeek: "monday",
+    exercises: [
+      { name: "Bench Press", sets: 4, reps: 8 },
+      { name: "Overhead Press", sets: 3, reps: 10 },
+      { name: "Incline Dumbbell Press", sets: 3, reps: 12 },
+      { name: "Tricep Dips", sets: 3, reps: 12 },
+      { name: "Lateral Raises", sets: 3, reps: 15 },
+    ],
+  },
+  {
+    id: generateId(),
+    name: "Pull Day",
+    dayOfWeek: "tuesday",
+    exercises: [
+      { name: "Deadlift", sets: 4, reps: 6 },
+      { name: "Pull-ups", sets: 4, reps: 8 },
+      { name: "Barbell Rows", sets: 3, reps: 10 },
+      { name: "Face Pulls", sets: 3, reps: 15 },
+      { name: "Bicep Curls", sets: 3, reps: 12 },
+    ],
+  },
+  {
+    id: generateId(),
+    name: "Legs Day",
+    dayOfWeek: "thursday",
+    exercises: [
+      { name: "Squats", sets: 4, reps: 8 },
+      { name: "Romanian Deadlift", sets: 3, reps: 10 },
+      { name: "Leg Press", sets: 3, reps: 12 },
+      { name: "Leg Curls", sets: 3, reps: 12 },
+      { name: "Calf Raises", sets: 4, reps: 15 },
+    ],
+  },
+  {
+    id: generateId(),
+    name: "Upper Body",
+    dayOfWeek: "friday",
+    exercises: [
+      { name: "Incline Bench Press", sets: 4, reps: 8 },
+      { name: "Cable Rows", sets: 3, reps: 12 },
+      { name: "Dumbbell Shoulder Press", sets: 3, reps: 10 },
+      { name: "Lat Pulldown", sets: 3, reps: 12 },
+      { name: "Dumbbell Curls", sets: 3, reps: 12 },
+    ],
+  },
+];
+
+const defaultMealTemplates: MealTemplate[] = [
+  {
+    id: generateId(),
+    name: "Standard Day",
+    dayOfWeek: "monday",
+    meals: [
+      { name: "Breakfast", description: "Oatmeal with protein", calories: 450 },
+      { name: "Lunch", description: "Chicken & rice bowl", calories: 650 },
+      { name: "Snack", description: "Greek yogurt & nuts", calories: 300 },
+      { name: "Dinner", description: "Salmon with vegetables", calories: 600 },
+    ],
+  },
+];
+
+export function useFitnessData() {
+  const [dayRecords, setDayRecords] = useLocalStorage<
+    Record<string, DayRecord>
+  >("formday-records", {});
+  const [weeklyPlan, setWeeklyPlan] = useLocalStorage<WeeklyPlan>(
+    "formday-weekly-plan",
+    defaultWeeklyPlan,
+  );
+  const [workoutTemplates, setWorkoutTemplates] = useLocalStorage<
+    WorkoutTemplate[]
+  >("formday-workout-templates", defaultWorkoutTemplates);
+  const [mealTemplates, setMealTemplates] = useLocalStorage<MealTemplate[]>(
+    "formday-meal-templates",
+    defaultMealTemplates,
+  );
+  const [profile, setProfile] = useLocalStorage<UserProfile>(
+    "formday-profile",
+    { name: "", email: "" },
+  );
+
+  const getDayRecord = useCallback(
+    (date: Date): DayRecord | null => {
+      const dateString = getDateString(date);
+      return dayRecords[dateString] || null;
+    },
+    [dayRecords],
+  );
+
+  const getTodayRecord = useCallback((): DayRecord | null => {
+    return getDayRecord(new Date());
+  }, [getDayRecord]);
+
+  const getDayType = useCallback(
+    (date: Date): "workout" | "rest" => {
+      const dayOfWeek = getDayOfWeek(date);
+      return weeklyPlan[dayOfWeek];
+    },
+    [weeklyPlan],
+  );
+
+  const getWorkoutTemplateForDay = useCallback(
+    (date: Date): WorkoutTemplate | null => {
+      const dayOfWeek = getDayOfWeek(date);
+      return workoutTemplates.find((t) => t.dayOfWeek === dayOfWeek) || null;
+    },
+    [workoutTemplates],
+  );
+
+  const getMealTemplateForDay = useCallback(
+    (date: Date): MealTemplate | null => {
+      const dayOfWeek = getDayOfWeek(date);
+      return (
+        mealTemplates.find((t) => t.dayOfWeek === dayOfWeek) ||
+        mealTemplates[0] ||
+        null
+      );
+    },
+    [mealTemplates],
+  );
+
+  const createDayRecord = useCallback(
+    (date: Date): DayRecord => {
+      const dateString = getDateString(date);
+      const dayType = getDayType(date);
+      const workoutTemplate = getWorkoutTemplateForDay(date);
+      const mealTemplate = getMealTemplateForDay(date);
+
+      const record: DayRecord = {
+        date: dateString,
+        dayType,
+        workouts:
+          workoutTemplate && dayType === "workout"
+            ? [
+                {
+                  id: generateId(),
+                  name: workoutTemplate.name,
+                  completed: false,
+                  exercises: workoutTemplate.exercises.map((e) => ({
+                    ...e,
+                    id: generateId(),
+                    completed: false,
+                  })),
+                },
+              ]
+            : [],
+        meals: mealTemplate
+          ? mealTemplate.meals.map((m) => ({
+              ...m,
+              id: generateId(),
+              completed: false,
+            }))
+          : [],
+      };
+
+      setDayRecords((prev) => ({ ...prev, [dateString]: record }));
+      return record;
+    },
+    [
+      getDayType,
+      getWorkoutTemplateForDay,
+      getMealTemplateForDay,
+      setDayRecords,
+    ],
+  );
+
+  const updateDayRecord = useCallback(
+    (date: Date, updates: Partial<DayRecord>) => {
+      const dateString = getDateString(date);
+      setDayRecords((prev) => ({
+        ...prev,
+        [dateString]: {
+          ...(prev[dateString] || {
+            date: dateString,
+            dayType: "rest",
+            workouts: [],
+            meals: [],
+          }),
+          ...updates,
+        },
+      }));
+    },
+    [setDayRecords],
+  );
+
+  const toggleExercise = useCallback(
+    (date: Date, workoutId: string, exerciseId: string) => {
+      const dateString = getDateString(date);
+      setDayRecords((prev) => {
+        const record = prev[dateString];
+        if (!record) return prev;
+
+        return {
+          ...prev,
+          [dateString]: {
+            ...record,
+            workouts: record.workouts.map((w) =>
+              w.id === workoutId
+                ? {
+                    ...w,
+                    exercises: w.exercises.map((e) =>
+                      e.id === exerciseId
+                        ? { ...e, completed: !e.completed }
+                        : e,
+                    ),
+                  }
+                : w,
+            ),
+          },
+        };
+      });
+    },
+    [setDayRecords],
+  );
+
+  const toggleMeal = useCallback(
+    (date: Date, mealId: string) => {
+      const dateString = getDateString(date);
+      setDayRecords((prev) => {
+        const record = prev[dateString];
+        if (!record) return prev;
+
+        return {
+          ...prev,
+          [dateString]: {
+            ...record,
+            meals: record.meals.map((m) =>
+              m.id === mealId ? { ...m, completed: !m.completed } : m,
+            ),
+          },
+        };
+      });
+    },
+    [setDayRecords],
+  );
+
+  const getRecordsInRange = useCallback(
+    (startDate: Date, endDate: Date): DayRecord[] => {
+      const records: DayRecord[] = [];
+      const current = new Date(startDate);
+
+      while (current <= endDate) {
+        const record = getDayRecord(current);
+        if (record) {
+          records.push(record);
+        }
+        current.setDate(current.getDate() + 1);
+      }
+
+      return records;
+    },
+    [getDayRecord],
+  );
+
+  return {
+    // Data
+    dayRecords,
+    weeklyPlan,
+    workoutTemplates,
+    mealTemplates,
+    profile,
+
+    // Getters
+    getDayRecord,
+    getTodayRecord,
+    getDayType,
+    getWorkoutTemplateForDay,
+    getMealTemplateForDay,
+    getRecordsInRange,
+
+    // Setters
+    createDayRecord,
+    updateDayRecord,
+    toggleExercise,
+    toggleMeal,
+    setWeeklyPlan,
+    setWorkoutTemplates,
+    setMealTemplates,
+    setProfile,
+  };
+}
