@@ -1,62 +1,31 @@
-declare module "next-pwa" {
+declare module "@serwist/next" {
   import type { NextConfig } from "next";
 
-  interface RuntimeCacheEntry {
-    urlPattern: RegExp | string;
-    handler:
-      | "CacheFirst"
-      | "CacheOnly"
-      | "NetworkFirst"
-      | "NetworkOnly"
-      | "StaleWhileRevalidate";
-    options?: {
-      cacheName?: string;
-      expiration?: {
-        maxEntries?: number;
-        maxAgeSeconds?: number;
-        purgeOnQuotaError?: boolean;
-      };
-      networkTimeoutSeconds?: number;
-      cacheableResponse?: {
-        statuses?: number[];
-        headers?: Record<string, string>;
-      };
-      matchOptions?: {
-        ignoreSearch?: boolean;
-        ignoreMethod?: boolean;
-        ignoreVary?: boolean;
-      };
-    };
-  }
-
-  interface PWAConfig {
-    dest?: string;
+  interface SerwistNextConfig {
+    swSrc: string;
+    swDest: string;
     disable?: boolean;
-    register?: boolean;
-    scope?: string;
-    sw?: string;
-    skipWaiting?: boolean;
-    runtimeCaching?: RuntimeCacheEntry[];
-    buildExcludes?: (string | RegExp)[];
-    dynamicStartUrl?: boolean;
-    dynamicStartUrlRedirect?: string;
-    fallbacks?: {
-      document?: string;
-      image?: string;
-      audio?: string;
-      video?: string;
-      font?: string;
-    };
-    cacheOnFrontEndNav?: boolean;
     reloadOnOnline?: boolean;
-    customWorkerDir?: string;
-    customWorkerSrc?: string;
-    customWorkerDest?: string;
-    customWorkerPrefix?: string;
-    publicExcludes?: string[];
+    scope?: string;
+    cacheOnNavigation?: boolean;
+    swUrl?: string;
+    register?: boolean;
+    maximumFileSizeToCacheInBytes?: number;
+    additionalPrecacheEntries?: (string | { url: string; revision?: string })[];
+    dontCacheBustURLsMatching?: RegExp;
+    exclude?: (string | RegExp)[];
+    excludeChunks?: string[];
+    chunks?: "all" | string[];
+    mode?: "production" | "development";
+    navigateFallback?: string;
+    navigateFallbackAllowlist?: RegExp[];
+    navigateFallbackDenylist?: RegExp[];
+    offlineAnalyticsConfig?: boolean | object;
   }
 
-  function withPWA(config: PWAConfig): (nextConfig: NextConfig) => NextConfig;
+  function withSerwist(
+    config: SerwistNextConfig,
+  ): (nextConfig: NextConfig) => NextConfig;
 
-  export default withPWA;
+  export default withSerwist;
 }
