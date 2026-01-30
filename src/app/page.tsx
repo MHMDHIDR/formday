@@ -137,7 +137,7 @@ export default function Home() {
               onClick={() =>
                 navigate(`/day/${today.toISOString().split("T")[0]}`)
               }
-              className="w-full p-4 rounded-2xl bg-gradient-accent text-accent-foreground font-semibold shadow-card"
+              className="w-full p-4 cursor-pointer rounded-2xl bg-gradient-accent text-accent-foreground font-semibold shadow-card"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
