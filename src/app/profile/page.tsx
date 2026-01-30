@@ -35,9 +35,9 @@ const ProfilePage = () => {
     <div className="min-h-screen bg-background pb-24">
       {/* Header */}
       <header className="sticky top-0 z-40 bg-background/95 backdrop-blur-lg border-b border-border">
-        <div className="container py-4">
+        <div className="container mx-auto py-4 px-2">
           <h1 className="text-2xl font-bold flex items-center gap-2">
-            <User className="w-6 h-6 text-accent" />
+            <User className="size-6 text-accent" />
             Profile
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
@@ -46,7 +46,7 @@ const ProfilePage = () => {
         </div>
       </header>
 
-      <main className="container py-6">
+      <main className="container py-6 mx-auto px-2">
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -66,7 +66,7 @@ const ProfilePage = () => {
               {/* Name Field */}
               <div className="space-y-2">
                 <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                  <User className="w-4 h-4" />
+                  <User className="size-4" />
                   Full Name
                 </label>
                 <input
@@ -81,7 +81,7 @@ const ProfilePage = () => {
               {/* Email Field */}
               <div className="space-y-2">
                 <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                  <Mail className="w-4 h-4" />
+                  <Mail className="size-4" />
                   Email
                 </label>
                 <input

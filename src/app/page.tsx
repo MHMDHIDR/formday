@@ -29,7 +29,7 @@ const itemVariants = {
   visible: { opacity: 1, y: 0 },
 };
 
-const Index = () => {
+export default function Home() {
   const router = useRouter();
   const {
     getTodayRecord,
@@ -87,7 +87,7 @@ const Index = () => {
     <div className="min-h-screen bg-background pb-24 mx-auto">
       {/* Header */}
       <header className="sticky top-0 z-40 bg-background/95 backdrop-blur-lg border-b border-border">
-        <div className="container py-4">
+        <div className="container mx-auto py-4 px-2">
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -114,7 +114,7 @@ const Index = () => {
       </header>
 
       {/* Main Content */}
-      <main className="container py-6 mx-auto">
+      <main className="container py-6 px-2 mx-auto">
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -150,8 +150,8 @@ const Index = () => {
             <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">
               Quick Access
             </h3>
-            <div className="grid grid-cols-2 gap-4">
-              {navItems.slice(0, 4).map((item, index) => (
+            <div className="grid grid-cols-3 gap-4">
+              {navItems.map((item, index) => (
                 <motion.div
                   key={item.label}
                   variants={itemVariants}
@@ -167,17 +167,6 @@ const Index = () => {
               ))}
             </div>
           </motion.div>
-
-          {/* Profile Card */}
-          <motion.div variants={itemVariants}>
-            <NavCard
-              icon={User}
-              label="Profile"
-              description="Your settings"
-              onClick={() => navigate("/profile")}
-              className="w-full"
-            />
-          </motion.div>
         </motion.div>
       </main>
 
@@ -185,6 +174,4 @@ const Index = () => {
       <BottomNav />
     </div>
   );
-};
-
-export default Index;
+}

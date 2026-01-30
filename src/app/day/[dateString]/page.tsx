@@ -77,7 +77,7 @@ const DayDetailPage = () => {
     <div className="min-h-screen bg-background pb-24">
       {/* Header */}
       <header className="sticky top-0 z-40 bg-background/95 backdrop-blur-lg border-b border-border">
-        <div className="container py-4">
+        <div className="container mx-auto py-4 px-2">
           <div className="flex items-center gap-4">
             <motion.button
               className="p-2 rounded-xl hover:bg-secondary tap-target"
@@ -97,12 +97,12 @@ const DayDetailPage = () => {
               >
                 {isWorkoutDay ? (
                   <>
-                    <Dumbbell className="w-4 h-4" />
+                    <Dumbbell className="size-4" />
                     <span>Workout Day</span>
                   </>
                 ) : (
                   <>
-                    <Moon className="w-4 h-4" />
+                    <Moon className="size-4" />
                     <span>Rest Day</span>
                   </>
                 )}
@@ -112,7 +112,7 @@ const DayDetailPage = () => {
         </div>
       </header>
 
-      <main className="container py-6">
+      <main className="container py-6 mx-auto px-2">
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -151,7 +151,7 @@ const DayDetailPage = () => {
             dayRecord.workouts.length > 0 && (
               <motion.div variants={itemVariants} className="space-y-3">
                 <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
-                  <Dumbbell className="w-4 h-4" />
+                  <Dumbbell className="size-4" />
                   Workouts
                 </h3>
 
@@ -181,14 +181,14 @@ const DayDetailPage = () => {
                         >
                           <div
                             className={cn(
-                              "w-6 h-6 rounded-full flex items-center justify-center border-2 transition-all",
+                              "size-6 rounded-full flex items-center justify-center border-2 transition-all",
                               exercise.completed
                                 ? "border-success bg-success"
                                 : "border-muted-foreground",
                             )}
                           >
                             {exercise.completed && (
-                              <Check className="w-4 h-4 text-success-foreground" />
+                              <Check className="size-4 text-success-foreground" />
                             )}
                           </div>
 
@@ -238,7 +238,7 @@ const DayDetailPage = () => {
           {dayRecord?.meals && dayRecord.meals.length > 0 && (
             <motion.div variants={itemVariants} className="space-y-3">
               <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
-                <UtensilsCrossed className="w-4 h-4" />
+                <UtensilsCrossed className="size-4" />
                 Meals
               </h3>
 
@@ -257,14 +257,14 @@ const DayDetailPage = () => {
                   >
                     <div
                       className={cn(
-                        "w-6 h-6 rounded-full flex items-center justify-center border-2 transition-all",
+                        "size-6 rounded-full flex items-center justify-center border-2 transition-all",
                         meal.completed
                           ? "border-accent bg-accent"
                           : "border-muted-foreground",
                       )}
                     >
                       {meal.completed && (
-                        <Check className="w-4 h-4 text-accent-foreground" />
+                        <Check className="size-4 text-accent-foreground" />
                       )}
                     </div>
 

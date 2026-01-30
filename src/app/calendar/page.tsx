@@ -106,7 +106,7 @@ const CalendarPage = () => {
     <div className="min-h-screen bg-background pb-24">
       {/* Header */}
       <header className="sticky top-0 z-40 bg-background/95 backdrop-blur-lg border-b border-border">
-        <div className="container py-4">
+        <div className="container mx-auto py-4 px-2">
           <div className="flex items-center justify-between">
             <motion.button
               className="p-2 rounded-xl hover:bg-secondary tap-target"
@@ -132,7 +132,7 @@ const CalendarPage = () => {
       </header>
 
       {/* Calendar Grid */}
-      <main className="container py-6">
+      <main className="container py-6 mx-auto px-2">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -192,20 +192,20 @@ const CalendarPage = () => {
                     {status.dayType === "workout" ? (
                       <Dumbbell
                         className={cn(
-                          "w-3 h-3",
+                          "size-3",
                           status.isComplete
                             ? "text-success"
                             : "text-workout/60",
                         )}
                       />
                     ) : (
-                      <Moon className="w-3 h-3 text-rest/60" />
+                      <Moon className="size-3 text-rest/60" />
                     )}
 
                     {/* Completion indicator */}
                     {status.hasRecord &&
                       (status.isComplete ? (
-                        <Check className="w-3 h-3 text-success" />
+                        <Check className="size-3 text-success" />
                       ) : status.completion > 0 ? (
                         <Circle className="w-2 h-2 text-warning fill-warning" />
                       ) : null)}
@@ -218,15 +218,15 @@ const CalendarPage = () => {
           {/* Legend */}
           <div className="flex items-center justify-center gap-6 pt-4 text-sm text-muted-foreground">
             <div className="flex items-center gap-2">
-              <Dumbbell className="w-4 h-4 text-workout" />
+              <Dumbbell className="size-4 text-workout" />
               <span>Workout</span>
             </div>
             <div className="flex items-center gap-2">
-              <Moon className="w-4 h-4 text-rest" />
+              <Moon className="size-4 text-rest" />
               <span>Rest</span>
             </div>
             <div className="flex items-center gap-2">
-              <Check className="w-4 h-4 text-success" />
+              <Check className="size-4 text-success" />
               <span>Complete</span>
             </div>
           </div>

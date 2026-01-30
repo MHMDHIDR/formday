@@ -118,9 +118,9 @@ const WorkoutPlannerPage = () => {
     <div className="min-h-screen bg-background pb-24">
       {/* Header */}
       <header className="sticky top-0 z-40 bg-background/95 backdrop-blur-lg border-b border-border">
-        <div className="container py-4">
+        <div className="container mx-auto py-4 px-2">
           <h1 className="text-2xl font-bold flex items-center gap-2">
-            <Dumbbell className="w-6 h-6 text-workout" />
+            <Dumbbell className="size-6 text-workout" />
             Workout Planner
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
@@ -129,7 +129,7 @@ const WorkoutPlannerPage = () => {
         </div>
       </header>
 
-      <main className="container py-6">
+      <main className="container py-6 mx-auto px-2">
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -160,7 +160,7 @@ const WorkoutPlannerPage = () => {
                   <span className="text-xs font-medium">{label}</span>
                   <Dumbbell
                     className={cn(
-                      "w-4 h-4",
+                      "size-4",
                       weeklyPlan[key] === "rest" && "opacity-30",
                     )}
                   />
@@ -229,7 +229,7 @@ const WorkoutPlannerPage = () => {
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
                   >
-                    <GripVertical className="w-4 h-4 text-muted-foreground cursor-grab" />
+                    <GripVertical className="size-4 text-muted-foreground cursor-grab" />
 
                     <div className="flex-1 grid grid-cols-3 gap-2">
                       <input
@@ -293,7 +293,7 @@ const WorkoutPlannerPage = () => {
                         removeExercise(templateForSelectedDay.id, index)
                       }
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <Trash2 className="size-4" />
                     </motion.button>
                   </motion.div>
                 ))}
@@ -303,7 +303,7 @@ const WorkoutPlannerPage = () => {
                   whileTap={{ scale: 0.98 }}
                   onClick={addExercise}
                 >
-                  <Plus className="w-4 h-4" />
+                  <Plus className="size-4" />
                   Add Exercise
                 </motion.button>
               </div>

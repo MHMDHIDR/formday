@@ -40,7 +40,7 @@ export function NavCard({
       <Icon className="w-8 h-8" strokeWidth={1.5} />
       <span className="text-sm font-semibold">{label}</span>
       {description && (
-        <span className="text-xs text-muted-foreground text-center">
+        <span className="text-xs text-muted-foreground whitespace-nowrap text-center">
           {description}
         </span>
       )}

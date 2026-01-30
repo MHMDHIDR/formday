@@ -66,12 +66,12 @@ export function TodaySnapshot({
           >
             {isWorkoutDay ? (
               <>
-                <Dumbbell className="w-4 h-4" />
+                <Dumbbell className="size-4" />
                 <span>Workout Day</span>
               </>
             ) : (
               <>
-                <Moon className="w-4 h-4" />
+                <Moon className="size-4" />
                 <span>Rest Day</span>
               </>
             )}
@@ -104,7 +104,7 @@ export function TodaySnapshot({
           {isWorkoutDay && (
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-full bg-workout/10 flex items-center justify-center">
-                <Dumbbell className="w-4 h-4 text-workout" />
+                <Dumbbell className="size-4 text-workout" />
               </div>
               <div className="flex-1">
                 <ProgressBar
@@ -119,7 +119,7 @@ export function TodaySnapshot({
 
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center">
-              <UtensilsCrossed className="w-4 h-4 text-accent" />
+              <UtensilsCrossed className="size-4 text-accent" />
             </div>
             <div className="flex-1">
               <ProgressBar

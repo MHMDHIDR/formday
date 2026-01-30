@@ -142,9 +142,9 @@ const AnalyticsPage = () => {
     <div className="min-h-screen bg-background pb-24">
       {/* Header */}
       <header className="sticky top-0 z-40 bg-background/95 backdrop-blur-lg border-b border-border">
-        <div className="container py-4">
+        <div className="container mx-auto py-4 px-2">
           <h1 className="text-2xl font-bold flex items-center gap-2">
-            <BarChart3 className="w-6 h-6 text-accent" />
+            <BarChart3 className="size-6 text-primary" />
             Analytics
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
@@ -153,7 +153,7 @@ const AnalyticsPage = () => {
         </div>
       </header>
 
-      <main className="container py-6">
+      <main className="container py-6 mx-auto px-2">
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -314,11 +314,11 @@ const AnalyticsPage = () => {
               {/* Legend */}
               <div className="flex items-center justify-center gap-6 mt-4 text-sm">
                 <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-workout" />
+                  <div className="size-3 rounded-full bg-workout" />
                   <span className="text-muted-foreground">Workout</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-accent" />
+                  <div className="size-3 rounded-full bg-accent" />
                   <span className="text-muted-foreground">Meals</span>
                 </div>
               </div>
