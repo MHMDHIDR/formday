@@ -7,11 +7,11 @@ import type {
   MealTemplate,
   UserProfile,
 } from "@/types/fitness";
-import { useCallback } from "react";
-// Generate simple unique IDs
+import { useCallback, useMemo } from "react";
+
+// Generate stable unique IDs using timestamp + random
 const generateId = () =>
-  Math.random().toString(36).substring(2, 15) +
-  Math.random().toString(36).substring(2, 15);
+  `${Date.now().toString(36)}-${Math.random().toString(36).substring(2, 9)}`;
 
 const defaultWeeklyPlan: WeeklyPlan = {
   monday: "workout",
@@ -25,7 +25,7 @@ const defaultWeeklyPlan: WeeklyPlan = {
 
 const defaultWorkoutTemplates: WorkoutTemplate[] = [
   {
-    id: generateId(),
+    id: "default-push-day",
     name: "Push Day",
     dayOfWeek: "monday",
     exercises: [
@@ -37,7 +37,7 @@ const defaultWorkoutTemplates: WorkoutTemplate[] = [
     ],
   },
   {
-    id: generateId(),
+    id: "default-pull-day",
     name: "Pull Day",
     dayOfWeek: "tuesday",
     exercises: [
@@ -49,7 +49,7 @@ const defaultWorkoutTemplates: WorkoutTemplate[] = [
     ],
   },
   {
-    id: generateId(),
+    id: "default-legs-day",
     name: "Legs Day",
     dayOfWeek: "thursday",
     exercises: [
@@ -61,7 +61,7 @@ const defaultWorkoutTemplates: WorkoutTemplate[] = [
     ],
   },
   {
-    id: generateId(),
+    id: "default-upper-body",
     name: "Upper Body",
     dayOfWeek: "friday",
     exercises: [
@@ -76,7 +76,7 @@ const defaultWorkoutTemplates: WorkoutTemplate[] = [
 
 const defaultMealTemplates: MealTemplate[] = [
   {
-    id: generateId(),
+    id: "default-standard-day",
     name: "Standard Day",
     dayOfWeek: "monday",
     meals: [
@@ -89,24 +89,33 @@ const defaultMealTemplates: MealTemplate[] = [
 ];
 
 export function useFitnessData() {
-  const [dayRecords, setDayRecords] = useLocalStorage<
+  const [dayRecords, setDayRecords, recordsLoading] = useLocalStorage<
     Record<string, DayRecord>
   >("formday-records", {});
-  const [weeklyPlan, setWeeklyPlan] = useLocalStorage<WeeklyPlan>(
+  const [weeklyPlan, setWeeklyPlan, planLoading] = useLocalStorage<WeeklyPlan>(
     "formday-weekly-plan",
     defaultWeeklyPlan,
   );
-  const [workoutTemplates, setWorkoutTemplates] = useLocalStorage<
-    WorkoutTemplate[]
-  >("formday-workout-templates", defaultWorkoutTemplates);
-  const [mealTemplates, setMealTemplates] = useLocalStorage<MealTemplate[]>(
-    "formday-meal-templates",
-    defaultMealTemplates,
-  );
-  const [profile, setProfile] = useLocalStorage<UserProfile>(
+  const [workoutTemplates, setWorkoutTemplates, workoutsLoading] =
+    useLocalStorage<WorkoutTemplate[]>(
+      "formday-workout-templates",
+      defaultWorkoutTemplates,
+    );
+  const [mealTemplates, setMealTemplates, mealsLoading] = useLocalStorage<
+    MealTemplate[]
+  >("formday-meal-templates", defaultMealTemplates);
+  const [profile, setProfile, profileLoading] = useLocalStorage<UserProfile>(
     "formday-profile",
     { name: "", email: "" },
   );
+
+  // Combined loading state
+  const isLoading =
+    recordsLoading ||
+    planLoading ||
+    workoutsLoading ||
+    mealsLoading ||
+    profileLoading;
 
   const getDayRecord = useCallback(
     (date: Date): DayRecord | null => {
@@ -217,7 +226,12 @@ export function useFitnessData() {
       const dateString = getDateString(date);
       setDayRecords((prev) => {
         const record = prev[dateString];
-        if (!record) return prev;
+        if (!record) {
+          console.warn(
+            `toggleExercise: No record found for date ${dateString}. Creating record is required first.`,
+          );
+          return prev;
+        }
 
         return {
           ...prev,
@@ -247,7 +261,12 @@ export function useFitnessData() {
       const dateString = getDateString(date);
       setDayRecords((prev) => {
         const record = prev[dateString];
-        if (!record) return prev;
+        if (!record) {
+          console.warn(
+            `toggleMeal: No record found for date ${dateString}. Creating record is required first.`,
+          );
+          return prev;
+        }
 
         return {
           ...prev,
@@ -282,6 +301,9 @@ export function useFitnessData() {
   );
 
   return {
+    // Loading state
+    isLoading,
+
     // Data
     dayRecords,
     weeklyPlan,

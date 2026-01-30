@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import { useParams, useRouter } from "next/navigation";
 import { useFitnessData } from "@/hooks/useFitnessData";
@@ -14,6 +14,7 @@ import {
   Moon,
   Check,
   Circle,
+  Loader2,
 } from "lucide-react";
 import {
   parseDate,
@@ -40,6 +41,7 @@ const DayDetailPage = () => {
   const dateString = params.dateString as string;
   const router = useRouter();
   const {
+    isLoading,
     getDayRecord,
     getDayType,
     createDayRecord,
@@ -50,19 +52,21 @@ const DayDetailPage = () => {
   const navigateBack = () => router.back();
   const navigate = (path: string) => router.push(path);
 
-  const date = dateString ? parseDate(dateString) : new Date();
-  let dayRecord = getDayRecord(date);
+  // Memoize the parsed date to ensure stable reference
+  const date = useMemo(
+    () => (dateString ? parseDate(dateString) : new Date()),
+    [dateString],
+  );
+
+  const dayRecord = getDayRecord(date);
   const dayType = getDayType(date);
 
-  // Create record if it doesn't exist
+  // Create record if it doesn't exist (with proper dependencies)
   useEffect(() => {
-    if (!dayRecord && dateString) {
+    if (!isLoading && !dayRecord && dateString) {
       createDayRecord(date);
     }
-  }, [dateString]);
-
-  // Re-fetch after creation
-  dayRecord = getDayRecord(date);
+  }, [isLoading, dayRecord, dateString, createDayRecord, date]);
 
   const workoutCompletion = dayRecord
     ? calculateWorkoutCompletion(dayRecord.workouts)
