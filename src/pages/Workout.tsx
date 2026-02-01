@@ -101,21 +101,43 @@ const ExerciseItem = ({
           <span className="text-xs text-muted-foreground">sets</span>
         </div>
         <div className="flex items-center gap-1">
-          <input
-            type="number"
-            value={exercise.reps || ""}
-            onChange={(e) =>
-              updateExercise(
-                templateId,
-                index,
-                "reps",
-                parseInt(e.target.value) || 0,
-              )
-            }
-            className="w-12 bg-background rounded px-2 py-1 text-sm text-center"
-            placeholder="0"
-          />
-          <span className="text-xs text-muted-foreground">reps</span>
+          {exercise.reps ? (
+            <>
+              <input
+                type="number"
+                value={exercise.reps || ""}
+                onChange={(e) =>
+                  updateExercise(
+                    templateId,
+                    index,
+                    "reps",
+                    parseInt(e.target.value) || 0,
+                  )
+                }
+                className="w-12 bg-background rounded px-2 py-1 text-sm text-center"
+                placeholder="0"
+              />
+              <span className="text-xs text-muted-foreground">reps</span>
+            </>
+          ) : (
+            <>
+              <input
+                type="number"
+                value={exercise.mins || ""}
+                onChange={(e) =>
+                  updateExercise(
+                    templateId,
+                    index,
+                    "duration",
+                    parseInt(e.target.value) || 0,
+                  )
+                }
+                className="w-12 bg-background rounded px-2 py-1 text-sm text-center"
+                placeholder="0"
+              />
+              <span className="text-xs text-muted-foreground">mins</span>
+            </>
+          )}
         </div>
       </div>
 
@@ -124,13 +146,13 @@ const ExerciseItem = ({
         whileTap={{ scale: 0.9 }}
         onClick={() => removeExercise(templateId, index)}
       >
-        <Trash2 className="size-4" />
+        <Trash2 className="size-4 cursor-pointer" />
       </motion.button>
     </Reorder.Item>
   );
 };
 
-const WorkoutPlannerPage = () => {
+export default function WorkoutPlannerPage() {
   const { weeklyPlan, setWeeklyPlan, workoutTemplates, setWorkoutTemplates } =
     useFitnessData();
   const [selectedDay, setSelectedDay] = useState<keyof WeeklyPlan>("monday");
@@ -388,7 +410,7 @@ const WorkoutPlannerPage = () => {
                 )}
 
                 <motion.button
-                  className="w-full p-3 rounded-xl border-2 border-dashed border-muted-foreground/30 text-muted-foreground flex items-center justify-center gap-2 hover:border-accent hover:text-accent transition-colors"
+                  className="w-full cursor-pointer p-3 rounded-xl border-2 border-dashed border-muted-foreground/30 text-muted-foreground flex items-center justify-center gap-2 hover:border-purple-600 hover:text-purple-600 transition-colors"
                   whileTap={{ scale: 0.98 }}
                   onClick={addExercise}
                 >
@@ -421,6 +443,4 @@ const WorkoutPlannerPage = () => {
       <BottomNav />
     </div>
   );
-};
-
-export default WorkoutPlannerPage;
+}

@@ -26,50 +26,60 @@ const defaultWeeklyPlan: WeeklyPlan = {
 const defaultWorkoutTemplates: WorkoutTemplate[] = [
   {
     id: "default-push-day",
-    name: "Push Day",
+    name: "PUSH (chest / shoulders / triceps)",
     dayOfWeek: "monday",
     exercises: [
-      { id: "push-1", name: "Bench Press", sets: 4, reps: 8 },
-      { id: "push-2", name: "Overhead Press", sets: 3, reps: 10 },
-      { id: "push-3", name: "Incline Dumbbell Press", sets: 3, reps: 12 },
-      { id: "push-4", name: "Tricep Dips", sets: 3, reps: 12 },
-      { id: "push-5", name: "Lateral Raises", sets: 3, reps: 15 },
+      { id: "push-0", name: "Incline Stairs (warm-up)", sets: 1, mins: 15 }, // 15 minutes
+      { id: "push-1", name: "Bench Press or Push-ups", sets: 4, reps: 10 },
+      { id: "push-2", name: "Incline Dumbbell Press", sets: 3, reps: 10 },
+      {
+        id: "push-3",
+        name: "Shoulder Press (DB or machine)",
+        sets: 3,
+        reps: 10,
+      },
+      { id: "push-4", name: "Lateral Raises", sets: 3, reps: 15 },
+      { id: "push-5", name: "Triceps Pushdowns or Dips", sets: 3, reps: 12 },
     ],
   },
   {
     id: "default-pull-day",
-    name: "Pull Day",
+    name: "PULL (back / biceps)",
     dayOfWeek: "tuesday",
     exercises: [
-      { id: "pull-1", name: "Deadlift", sets: 4, reps: 6 },
-      { id: "pull-2", name: "Pull-ups", sets: 4, reps: 8 },
-      { id: "pull-3", name: "Barbell Rows", sets: 3, reps: 10 },
-      { id: "pull-4", name: "Face Pulls", sets: 3, reps: 15 },
-      { id: "pull-5", name: "Bicep Curls", sets: 3, reps: 12 },
+      { id: "pull-0", name: "Incline Stairs (warm-up)", sets: 1, mins: 15 }, // 15 minutes
+      { id: "pull-1", name: "Lat Pulldown or Pull-ups", sets: 4, reps: 10 },
+      { id: "pull-2", name: "Seated Row or Barbell Row", sets: 3, reps: 10 },
+      { id: "pull-3", name: "Face Pulls", sets: 3, reps: 15 },
+      { id: "pull-4", name: "Dumbbell Curls", sets: 3, reps: 12 },
+      { id: "pull-5", name: "Hammer Curls", sets: 2, reps: 12 },
     ],
   },
   {
     id: "default-legs-day",
-    name: "Legs Day",
+    name: "LEGS",
     dayOfWeek: "thursday",
     exercises: [
-      { id: "legs-1", name: "Squats", sets: 4, reps: 8 },
-      { id: "legs-2", name: "Romanian Deadlift", sets: 3, reps: 10 },
-      { id: "legs-3", name: "Leg Press", sets: 3, reps: 12 },
+      { id: "legs-0", name: "Incline Stairs (warm-up)", sets: 1, mins: 15 }, // 15 minutes
+      { id: "legs-1", name: "Squats or Leg Press", sets: 4, reps: 10 },
+      { id: "legs-2", name: "Romanian Deadlifts", sets: 3, reps: 10 },
+      { id: "legs-3", name: "Walking Lunges", sets: 3, reps: 10 }, // each leg
       { id: "legs-4", name: "Leg Curls", sets: 3, reps: 12 },
-      { id: "legs-5", name: "Calf Raises", sets: 4, reps: 15 },
+      { id: "legs-5", name: "Standing Calf Raises", sets: 4, reps: 15 },
     ],
   },
   {
     id: "default-upper-body",
-    name: "Upper Body",
+    name: "UPPER (full upper)",
     dayOfWeek: "friday",
     exercises: [
-      { id: "upper-1", name: "Incline Bench Press", sets: 4, reps: 8 },
-      { id: "upper-2", name: "Cable Rows", sets: 3, reps: 12 },
+      { id: "upper-0", name: "Incline Stairs (warm-up)", sets: 1, mins: 15 }, // 15 minutes
+      { id: "upper-1", name: "Incline Bench or Push-ups", sets: 3, reps: 10 },
+      { id: "upper-2", name: "Pull-ups or Lat Pulldown", sets: 3, reps: 10 },
       { id: "upper-3", name: "Dumbbell Shoulder Press", sets: 3, reps: 10 },
-      { id: "upper-4", name: "Lat Pulldown", sets: 3, reps: 12 },
-      { id: "upper-5", name: "Dumbbell Curls", sets: 3, reps: 12 },
+      { id: "upper-4", name: "Chest Fly or Cable Fly", sets: 2, reps: 12 },
+      { id: "upper-5", name: "EZ-Bar Curl", sets: 2, reps: 12 },
+      { id: "upper-6", name: "Triceps Pushdowns", sets: 2, reps: 12 },
     ],
   },
 ];

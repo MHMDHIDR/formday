@@ -7,6 +7,7 @@ export interface Exercise {
   name: string;
   sets?: number;
   reps?: number;
+  mins?: number;
   weight?: number;
   completed: boolean;
 }
