@@ -1,5 +1,3 @@
-"use client";
-
 import { FileQuestion } from "lucide-react";
 import { Link } from "react-router-dom";
 

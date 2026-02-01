@@ -1,5 +1,3 @@
-"use client";
-
 import { motion, AnimatePresence } from "framer-motion";
 import { WifiOff, Wifi, X } from "lucide-react";
 import { useNetworkStatus } from "@/hooks/useNetworkStatus";

@@ -7,7 +7,7 @@ import type {
   MealTemplate,
   UserProfile,
 } from "@/types/fitness";
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 
 // Generate stable unique IDs using timestamp + random
 const generateId = () =>

@@ -1,5 +1,3 @@
-"use client";
-
 import { OfflineBanner } from "./OfflineBanner";
 import { InstallPrompt } from "./InstallPrompt";
 

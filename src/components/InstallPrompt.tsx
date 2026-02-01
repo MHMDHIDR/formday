@@ -1,5 +1,3 @@
-"use client";
-
 import { motion, AnimatePresence } from "framer-motion";
 import { Download, X, Share, Plus } from "lucide-react";
 import { usePWAInstall } from "@/hooks/usePWAInstall";

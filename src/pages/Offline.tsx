@@ -1,8 +1,6 @@
-"use client";
-
 import { motion } from "framer-motion";
 import { WifiOff, RefreshCw, Home } from "lucide-react";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -88,7 +86,7 @@ export default function OfflinePage() {
             Try Again
           </motion.button>
 
-          <Link href="/" className="block w-full">
+          <Link to="/" className="block w-full">
             <motion.button
               className="w-full p-4 rounded-2xl bg-secondary text-secondary-foreground font-semibold flex items-center justify-center gap-2"
               whileHover={{ scale: 1.02 }}

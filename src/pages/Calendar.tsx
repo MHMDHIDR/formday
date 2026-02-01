@@ -1,8 +1,6 @@
-"use client";
-
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "react-router-dom";
 import { useFitnessData } from "@/hooks/useFitnessData";
 import { BottomNav } from "@/components/BottomNav";
 import { cn } from "@/lib/utils";
@@ -37,11 +35,11 @@ const MONTHS = [
 ];
 
 export default function CalendarPage() {
-  const router = useRouter();
+  const router = useNavigate();
   const { dayRecords, getDayType } = useFitnessData();
   const [currentDate, setCurrentDate] = useState(new Date());
 
-  const navigate = (path: string) => router.push(path);
+  const navigate = (path: string) => router(path);
 
   const today = new Date();
   const todayString = getDateString(today);

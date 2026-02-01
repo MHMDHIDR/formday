@@ -1,10 +1,4 @@
-import {
-  useState,
-  useEffect,
-  useCallback,
-  useRef,
-  useSyncExternalStore,
-} from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
 /**
  * Custom hook for persisting state to localStorage with SSR support
