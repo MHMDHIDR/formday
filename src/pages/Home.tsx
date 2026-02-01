@@ -116,7 +116,7 @@ export default function HomePage() {
       </header>
 
       {/* Main Content */}
-      <main className="container py-6 px-2 mx-auto">
+      <main className="container pt-6 pb-10 px-2 mx-auto">
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -152,12 +152,13 @@ export default function HomePage() {
             <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">
               Quick Access
             </h3>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {navItems.map((item, index) => (
                 <motion.div
                   key={item.label}
                   variants={itemVariants}
                   custom={index}
+                  className="mx-auto col-span-1 min-w-full"
                 >
                   <NavCard
                     icon={item.icon}

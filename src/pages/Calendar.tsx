@@ -130,7 +130,7 @@ export default function CalendarPage() {
       </header>
 
       {/* Calendar Grid */}
-      <main className="container py-6 mx-auto px-2">
+      <main className="container pt-6 pb-10 mx-auto px-2">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

@@ -44,7 +44,7 @@ const ProfilePage = () => {
         </div>
       </header>
 
-      <main className="container py-6 mx-auto px-2">
+      <main className="container pt-6 pb-10 mx-auto px-2">
         <motion.div
           variants={containerVariants}
           initial="hidden"

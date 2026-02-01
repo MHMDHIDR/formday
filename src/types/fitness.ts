@@ -48,7 +48,7 @@ export interface WorkoutTemplate {
   id: string;
   name: string;
   dayOfWeek: keyof WeeklyPlan;
-  exercises: Omit<Exercise, "id" | "completed">[];
+  exercises: (Omit<Exercise, "id" | "completed"> & { id?: string })[];
 }
 
 export interface MealTemplate {

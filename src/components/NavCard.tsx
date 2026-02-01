@@ -26,8 +26,8 @@ export function NavCard({
   return (
     <motion.button
       className={cn(
-        "relative flex flex-col items-center justify-center gap-3 p-6 rounded-2xl",
-        "card-interactive tap-target cursor-pointer",
+        "relative min-w-full flex flex-col items-center justify-center gap-3 p-3.5 rounded-2xl",
+        "card-interactive cursor-pointer",
         "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
         variantStyles[variant],
         className,
@@ -37,7 +37,7 @@ export function NavCard({
       transition={{ duration: 0.2 }}
       {...props}
     >
-      <Icon className="w-8 h-8" strokeWidth={1.5} />
+      <Icon className="size-8" strokeWidth={1.5} />
       <span className="text-sm font-semibold">{label}</span>
       {description && (
         <span className="text-xs text-muted-foreground whitespace-nowrap text-center">

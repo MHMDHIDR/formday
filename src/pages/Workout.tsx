@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion, Reorder, useDragControls } from "framer-motion";
 import { useFitnessData } from "@/hooks/useFitnessData";
 import { BottomNav } from "@/components/BottomNav";
 import { cn } from "@/lib/utils";
@@ -29,6 +29,107 @@ const itemVariants = {
   visible: { opacity: 1, y: 0 },
 };
 
+interface ExerciseItemProps {
+  exercise: WorkoutTemplate["exercises"][0];
+  index: number;
+  templateId: string;
+  updateExercise: (
+    templateId: string,
+    index: number,
+    field: string,
+    value: string | number,
+  ) => void;
+  removeExercise: (templateId: string, index: number) => void;
+}
+
+const ExerciseItem = ({
+  exercise,
+  index,
+  templateId,
+  updateExercise,
+  removeExercise,
+}: ExerciseItemProps) => {
+  const controls = useDragControls();
+
+  return (
+    <Reorder.Item
+      value={exercise}
+      id={exercise.id}
+      dragListener={false}
+      dragControls={controls}
+      className="flex items-center gap-3 p-3 rounded-xl bg-secondary/50 relative"
+      initial={{ opacity: 0, x: -10 }}
+      animate={{ opacity: 1, x: 0 }}
+      whileDrag={{
+        scale: 1.02,
+        zIndex: 10,
+        boxShadow: "0 5px 15px rgba(0,0,0,0.1)",
+      }}
+    >
+      <div
+        onPointerDown={(e) => controls.start(e)}
+        className="cursor-grab touch-none p-1 hover:bg-black/5 rounded active:cursor-grabbing"
+      >
+        <GripVertical className="size-4 text-muted-foreground" />
+      </div>
+
+      <div className="flex-1 grid grid-cols-3 gap-2">
+        <input
+          type="text"
+          value={exercise.name}
+          onChange={(e) =>
+            updateExercise(templateId, index, "name", e.target.value)
+          }
+          className="col-span-3 bg-transparent border-none outline-none font-medium"
+          placeholder="Exercise name"
+        />
+        <div className="flex items-center gap-1">
+          <input
+            type="number"
+            value={exercise.sets || ""}
+            onChange={(e) =>
+              updateExercise(
+                templateId,
+                index,
+                "sets",
+                parseInt(e.target.value) || 0,
+              )
+            }
+            className="w-12 bg-background rounded px-2 py-1 text-sm text-center"
+            placeholder="0"
+          />
+          <span className="text-xs text-muted-foreground">sets</span>
+        </div>
+        <div className="flex items-center gap-1">
+          <input
+            type="number"
+            value={exercise.reps || ""}
+            onChange={(e) =>
+              updateExercise(
+                templateId,
+                index,
+                "reps",
+                parseInt(e.target.value) || 0,
+              )
+            }
+            className="w-12 bg-background rounded px-2 py-1 text-sm text-center"
+            placeholder="0"
+          />
+          <span className="text-xs text-muted-foreground">reps</span>
+        </div>
+      </div>
+
+      <motion.button
+        className="p-2 rounded-lg hover:bg-destructive/10 text-destructive"
+        whileTap={{ scale: 0.9 }}
+        onClick={() => removeExercise(templateId, index)}
+      >
+        <Trash2 className="size-4" />
+      </motion.button>
+    </Reorder.Item>
+  );
+};
+
 const WorkoutPlannerPage = () => {
   const { weeklyPlan, setWeeklyPlan, workoutTemplates, setWorkoutTemplates } =
     useFitnessData();
@@ -52,7 +153,14 @@ const WorkoutPlannerPage = () => {
         id: Math.random().toString(36).substring(2, 15),
         name: `${selectedDay.charAt(0).toUpperCase() + selectedDay.slice(1)} Workout`,
         dayOfWeek: selectedDay,
-        exercises: [{ name: "New Exercise", sets: 3, reps: 10 }],
+        exercises: [
+          {
+            id: Math.random().toString(36).substring(2, 9),
+            name: "New Exercise",
+            sets: 3,
+            reps: 10,
+          },
+        ],
       };
       setWorkoutTemplates((prev) => [...prev, newTemplate]);
     } else {
@@ -64,7 +172,12 @@ const WorkoutPlannerPage = () => {
                 ...t,
                 exercises: [
                   ...t.exercises,
-                  { name: "New Exercise", sets: 3, reps: 10 },
+                  {
+                    id: Math.random().toString(36).substring(2, 9),
+                    name: "New Exercise",
+                    sets: 3,
+                    reps: 10,
+                  },
                 ],
               }
             : t,
@@ -112,6 +225,40 @@ const WorkoutPlannerPage = () => {
     );
   };
 
+  // Ensure all exercises have IDs for drag and drop
+  useEffect(() => {
+    let hasChanges = false;
+    const patchedTemplates = workoutTemplates.map((t) => {
+      const needsPatch = t.exercises.some((e) => !e.id);
+      if (needsPatch) {
+        hasChanges = true;
+        return {
+          ...t,
+          exercises: t.exercises.map((e) =>
+            e.id ? e : { ...e, id: Math.random().toString(36).substring(2, 9) },
+          ),
+        };
+      }
+      return t;
+    });
+
+    if (hasChanges) {
+      setWorkoutTemplates(patchedTemplates);
+    }
+  }, [workoutTemplates, setWorkoutTemplates]);
+
+  const handleReorder = (newExercises: WorkoutTemplate["exercises"]) => {
+    if (!templateForSelectedDay) return;
+
+    setWorkoutTemplates((prev) =>
+      prev.map((t) =>
+        t.id === templateForSelectedDay.id
+          ? { ...t, exercises: newExercises }
+          : t,
+      ),
+    );
+  };
+
   return (
     <div className="min-h-screen bg-background pb-24">
       {/* Header */}
@@ -127,7 +274,7 @@ const WorkoutPlannerPage = () => {
         </div>
       </header>
 
-      <main className="container py-6 mx-auto px-2">
+      <main className="container pt-6 pb-10 mx-auto px-2">
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -220,81 +367,25 @@ const WorkoutPlannerPage = () => {
                   />
                 )}
 
-                {templateForSelectedDay?.exercises.map((exercise, index) => (
-                  <motion.div
-                    key={index}
-                    className="flex items-center gap-3 p-3 rounded-xl bg-secondary/50"
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
+                {templateForSelectedDay && (
+                  <Reorder.Group
+                    axis="y"
+                    values={templateForSelectedDay.exercises}
+                    onReorder={handleReorder}
+                    className="space-y-4"
                   >
-                    <GripVertical className="size-4 text-muted-foreground cursor-grab" />
-
-                    <div className="flex-1 grid grid-cols-3 gap-2">
-                      <input
-                        type="text"
-                        value={exercise.name}
-                        onChange={(e) =>
-                          updateExercise(
-                            templateForSelectedDay.id,
-                            index,
-                            "name",
-                            e.target.value,
-                          )
-                        }
-                        className="col-span-3 bg-transparent border-none outline-none font-medium"
-                        placeholder="Exercise name"
+                    {templateForSelectedDay.exercises.map((exercise, index) => (
+                      <ExerciseItem
+                        key={exercise.id}
+                        exercise={exercise}
+                        index={index}
+                        templateId={templateForSelectedDay.id}
+                        updateExercise={updateExercise}
+                        removeExercise={removeExercise}
                       />
-                      <div className="flex items-center gap-1">
-                        <input
-                          type="number"
-                          value={exercise.sets || ""}
-                          onChange={(e) =>
-                            updateExercise(
-                              templateForSelectedDay.id,
-                              index,
-                              "sets",
-                              parseInt(e.target.value) || 0,
-                            )
-                          }
-                          className="w-12 bg-background rounded px-2 py-1 text-sm text-center"
-                          placeholder="0"
-                        />
-                        <span className="text-xs text-muted-foreground">
-                          sets
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <input
-                          type="number"
-                          value={exercise.reps || ""}
-                          onChange={(e) =>
-                            updateExercise(
-                              templateForSelectedDay.id,
-                              index,
-                              "reps",
-                              parseInt(e.target.value) || 0,
-                            )
-                          }
-                          className="w-12 bg-background rounded px-2 py-1 text-sm text-center"
-                          placeholder="0"
-                        />
-                        <span className="text-xs text-muted-foreground">
-                          reps
-                        </span>
-                      </div>
-                    </div>
-
-                    <motion.button
-                      className="p-2 rounded-lg hover:bg-destructive/10 text-destructive"
-                      whileTap={{ scale: 0.9 }}
-                      onClick={() =>
-                        removeExercise(templateForSelectedDay.id, index)
-                      }
-                    >
-                      <Trash2 className="size-4" />
-                    </motion.button>
-                  </motion.div>
-                ))}
+                    ))}
+                  </Reorder.Group>
+                )}
 
                 <motion.button
                   className="w-full p-3 rounded-xl border-2 border-dashed border-muted-foreground/30 text-muted-foreground flex items-center justify-center gap-2 hover:border-accent hover:text-accent transition-colors"
