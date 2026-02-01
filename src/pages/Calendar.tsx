@@ -36,7 +36,7 @@ const MONTHS = [
   "December",
 ];
 
-const CalendarPage = () => {
+export default function CalendarPage() {
   const router = useRouter();
   const { dayRecords, getDayType } = useFitnessData();
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -236,6 +236,4 @@ const CalendarPage = () => {
       <BottomNav />
     </div>
   );
-};
-
-export default CalendarPage;
+}

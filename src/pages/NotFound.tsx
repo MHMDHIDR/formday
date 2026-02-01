@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { FileQuestion } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function NotFound() {
   return (
@@ -15,7 +15,7 @@ export default function NotFound() {
         moved or doesn't exist.
       </p>
       <Link
-        href="/"
+        to="/"
         className="inline-flex items-center justify-center rounded-xl bg-primary px-8 py-3 text-sm font-semibold text-primary-foreground shadow-sm transition-transform hover:scale-105 hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
       >
         Return Home

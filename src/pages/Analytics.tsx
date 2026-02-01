@@ -44,7 +44,7 @@ const itemVariants = {
   visible: { opacity: 1, y: 0 },
 };
 
-const AnalyticsPage = () => {
+export default function AnalyticsPage() {
   const { dayRecords, getDayType } = useFitnessData();
   const [timeRange, setTimeRange] = useState<TimeRange>("7d");
 
@@ -366,6 +366,4 @@ const AnalyticsPage = () => {
       <BottomNav />
     </div>
   );
-};
-
-export default AnalyticsPage;
+}

@@ -1,8 +1,6 @@
-"use client";
-
 import { useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useNavigate } from "react-router-dom";
 import { useFitnessData } from "@/hooks/useFitnessData";
 import { ProgressBar } from "@/components/ProgressBar";
 import { BottomNav } from "@/components/BottomNav";
@@ -14,7 +12,6 @@ import {
   Moon,
   Check,
   Circle,
-  Loader2,
 } from "lucide-react";
 import {
   parseDate,
@@ -36,10 +33,9 @@ const itemVariants = {
   visible: { opacity: 1, x: 0 },
 };
 
-const DayDetailPage = () => {
-  const params = useParams();
-  const dateString = params.dateString as string;
-  const router = useRouter();
+export default function DayDetailPage() {
+  const { dateString } = useParams<{ dateString: string }>();
+  const navigate = useNavigate();
   const {
     isLoading,
     getDayRecord,
@@ -49,8 +45,7 @@ const DayDetailPage = () => {
     toggleMeal,
   } = useFitnessData();
 
-  const navigateBack = () => router.back();
-  const navigate = (path: string) => router.push(path);
+  const navigateBack = () => navigate(-1);
 
   // Memoize the parsed date to ensure stable reference
   const date = useMemo(
@@ -61,7 +56,7 @@ const DayDetailPage = () => {
   const dayRecord = getDayRecord(date);
   const dayType = getDayType(date);
 
-  // Create record if it doesn't exist (with proper dependencies)
+  // Create record if it doesn't exist
   useEffect(() => {
     if (!isLoading && !dayRecord && dateString) {
       createDayRecord(date);
@@ -332,6 +327,4 @@ const DayDetailPage = () => {
       <BottomNav />
     </div>
   );
-};
-
-export default DayDetailPage;
+}

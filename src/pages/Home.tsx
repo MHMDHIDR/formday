@@ -1,8 +1,6 @@
-"use client";
-
 import { useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "react-router-dom";
 import { useFitnessData } from "@/hooks/useFitnessData";
 import { TodaySnapshot } from "@/components/TodaySnapshot";
 import { NavCard } from "@/components/NavCard";
@@ -13,7 +11,6 @@ import {
   UtensilsCrossed,
   BarChart3,
   User,
-  Loader2,
 } from "lucide-react";
 
 const containerVariants = {
@@ -31,8 +28,8 @@ const itemVariants = {
   visible: { opacity: 1, y: 0 },
 };
 
-export default function Home() {
-  const router = useRouter();
+export default function HomePage() {
+  const navigate = useNavigate();
   const {
     isLoading,
     getTodayRecord,
@@ -48,14 +45,12 @@ export default function Home() {
   const dayType = getDayType(today);
   const workoutTemplate = getWorkoutTemplateForDay(today);
 
-  // Create today's record if it doesn't exist (moved to useEffect to avoid render-time mutation)
+  // Create today's record if it doesn't exist
   useEffect(() => {
     if (!isLoading && !todayRecord) {
       createDayRecord(today);
     }
   }, [isLoading, todayRecord, createDayRecord, today]);
-
-  const navigate = (path: string) => router.push(path);
 
   const navItems = [
     {

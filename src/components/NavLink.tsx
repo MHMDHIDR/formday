@@ -1,9 +1,8 @@
 "use client";
 
-import Link, { type LinkProps } from "next/link";
-import { usePathname } from "next/navigation";
 import { forwardRef } from "react";
 import { cn } from "@/lib/utils";
+import { Link, useLocation, type LinkProps } from "react-router-dom";
 
 interface NavLinkCompatProps extends Omit<LinkProps, "className" | "href"> {
   to: string;
@@ -23,7 +22,7 @@ const NavLink = forwardRef<HTMLAnchorElement, NavLinkCompatProps>(
     { className, activeClassName, pendingClassName, to, children, ...props },
     ref,
   ) => {
-    const pathname = usePathname();
+    const { pathname } = useLocation();
     const isActive = pathname === to || pathname?.startsWith(to) || false;
     const isPending = false; // Next.js doesn't expose pending state easily here
 
@@ -35,7 +34,7 @@ const NavLink = forwardRef<HTMLAnchorElement, NavLinkCompatProps>(
     return (
       <Link
         ref={ref}
-        href={to}
+        to={to}
         className={cn(computedClassName, isActive && activeClassName)}
         {...props}
       >

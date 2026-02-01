@@ -1,8 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import {
   Home,
@@ -11,6 +9,7 @@ import {
   UtensilsCrossed,
   BarChart3,
 } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 
 const navItems = [
   { to: "/", icon: Home, label: "Home" },
@@ -21,7 +20,7 @@ const navItems = [
 ];
 
 export function BottomNav() {
-  const pathname = usePathname();
+  const { pathname } = useLocation();
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-lg border-t border-border safe-area-inset">
@@ -36,7 +35,7 @@ export function BottomNav() {
           return (
             <Link
               key={item.to}
-              href={item.to}
+              to={item.to}
               className={cn(
                 "relative flex flex-col items-center gap-1 px-4 py-2 rounded-xl",
                 "tap-target transition-colors duration-200",
