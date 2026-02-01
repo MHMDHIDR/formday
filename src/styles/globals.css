@@ -411,6 +411,9 @@
 }
 
 @media screen and (display-mode: standalone) {
+  body * {
+    @apply select-none!;
+  }
   header {
     @apply pt-12;
   }

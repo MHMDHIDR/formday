@@ -44,7 +44,7 @@ export function BottomNav() {
               {isActive && (
                 <motion.div
                   layoutId="bubble"
-                  className="absolute inset-0 bg-gradient-to-br from-green-500/20 via-green-600/15 to-green-500/20 rounded-2xl shadow-lg shadow-green-500/20"
+                  className="absolute inset-0 bg-linear-to-br from-green-500/20 via-green-600/15 to-green-500/20 rounded-2xl shadow-lg shadow-green-500/20"
                   initial={false}
                   transition={{
                     type: "spring",
