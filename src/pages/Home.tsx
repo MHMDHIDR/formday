@@ -11,6 +11,7 @@ import {
   UtensilsCrossed,
   BarChart3,
   User,
+  Building2,
 } from "lucide-react";
 
 const containerVariants = {
@@ -76,6 +77,12 @@ export default function HomePage() {
       label: "Analytics",
       onClick: () => navigate("/analytics"),
       description: "Track progress",
+    },
+    {
+      icon: Building2,
+      label: "Prayers",
+      onClick: () => navigate("/prayers"),
+      description: "Prayer times",
     },
     {
       icon: User,

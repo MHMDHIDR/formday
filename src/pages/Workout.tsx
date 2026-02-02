@@ -5,6 +5,7 @@ import { BottomNav } from "@/components/BottomNav";
 import { cn } from "@/lib/utils";
 import { Dumbbell, Plus, Trash2, GripVertical, Check } from "lucide-react";
 import type { WeeklyPlan, WorkoutTemplate } from "@/types/fitness";
+import ActionButton from "@/components/ActionButton";
 
 const WEEKDAYS: { key: keyof WeeklyPlan; label: string }[] = [
   { key: "monday", label: "Mon" },
@@ -409,14 +410,10 @@ export default function WorkoutPlannerPage() {
                   </Reorder.Group>
                 )}
 
-                <motion.button
-                  className="w-full cursor-pointer p-3 rounded-xl border-2 border-dashed border-muted-foreground/30 text-muted-foreground flex items-center justify-center gap-2 hover:border-purple-600 hover:text-purple-600 transition-colors"
-                  whileTap={{ scale: 0.98 }}
-                  onClick={addExercise}
-                >
+                <ActionButton onClick={addExercise}>
                   <Plus className="size-4" />
                   Add Exercise
-                </motion.button>
+                </ActionButton>
               </div>
             </motion.div>
           )}

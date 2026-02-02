@@ -5,6 +5,7 @@ import { BottomNav } from "@/components/BottomNav";
 import { cn } from "@/lib/utils";
 import { UtensilsCrossed, Plus, Trash2, Flame } from "lucide-react";
 import type { MealTemplate, WeeklyPlan } from "@/types/fitness";
+import ActionButton from "@/components/ActionButton";
 
 const WEEKDAYS: { key: keyof WeeklyPlan; label: string }[] = [
   { key: "monday", label: "Mon" },
@@ -240,15 +241,10 @@ const MealPlannerPage = () => {
                   </div>
                 </motion.div>
               ))}
-
-              <motion.button
-                className="w-full p-4 rounded-2xl border-2 border-dashed border-muted-foreground/30 text-muted-foreground flex items-center justify-center gap-2 hover:border-accent hover:text-accent transition-colors"
-                whileTap={{ scale: 0.98 }}
-                onClick={addMeal}
-              >
-                <Plus className="w-5 h-5" />
+              <ActionButton onClick={addMeal}>
+                <Plus className="size-4" />
                 Add Meal
-              </motion.button>
+              </ActionButton>
             </div>
           </motion.div>
         </motion.div>

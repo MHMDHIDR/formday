@@ -12,6 +12,7 @@ import AnalyticsPage from "./pages/Analytics";
 import ProfilePage from "./pages/Profile";
 import OfflinePage from "./pages/Offline";
 import NotFoundPage from "./pages/NotFound";
+import PrayersPage from "./pages/PrayersPage";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -31,6 +32,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/day/:dateString" element={<DayDetailPage />} />
           <Route path="/calendar" element={<CalendarPage />} />
+          <Route path="/prayers" element={<PrayersPage />} />
           <Route path="/workout" element={<WorkoutPage />} />
           <Route path="/meals" element={<MealsPage />} />
           <Route path="/analytics" element={<AnalyticsPage />} />

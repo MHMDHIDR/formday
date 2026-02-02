@@ -19,6 +19,7 @@ import {
   calculateWorkoutCompletion,
   calculateMealCompletion,
 } from "@/types/fitness";
+import ActionButton from "@/components/ActionButton";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -304,20 +305,12 @@ export default function DayDetailPage() {
                   Start by adding workouts or meals for this day.
                 </p>
                 <div className="flex gap-3 justify-center">
-                  <motion.button
-                    className="px-4 py-2 rounded-xl bg-workout text-workout-foreground font-medium"
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => navigate("/workout")}
-                  >
+                  <ActionButton onClick={() => navigate("/workout")}>
                     Add Workout
-                  </motion.button>
-                  <motion.button
-                    className="px-4 py-2 rounded-xl bg-accent text-accent-foreground font-medium"
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => navigate("/meals")}
-                  >
+                  </ActionButton>
+                  <ActionButton onClick={() => navigate("/meals")}>
                     Add Meals
-                  </motion.button>
+                  </ActionButton>
                 </div>
               </motion.div>
             )}
