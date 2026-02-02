@@ -158,6 +158,11 @@ function CustomCalendar({
   );
 }
 
+const swipeConfidenceThreshold = 10000;
+const swipePower = (offset: number, velocity: number) => {
+  return Math.abs(offset) * velocity;
+};
+
 const slideVariants: Variants = {
   enter: (direction: number) => ({
     x: direction > 0 ? 50 : -50,
@@ -296,10 +301,24 @@ export default function PrayersPage() {
               <h1 className="text-3xl font-bold bg-linear-to-r from-emerald-200 to-teal-400 bg-clip-text text-transparent">
                 Prayer Times
               </h1>
-              <div className="flex items-center gap-2 text-emerald-400/80 mt-1 text-sm">
+              <div className="flex items-center gap-2 text-emerald-400/80 mt-1 text-sm mb-2">
                 <MapPin className="size-3" />
                 <span>
                   {city}, {country}
+                </span>
+              </div>
+              <div className="flex flex-col animate-in fade-in slide-in-from-left-2 duration-500">
+                <span className="text-emerald-100 font-medium text-lg leading-tight">
+                  {selectedDate.toLocaleDateString("en-GB", {
+                    weekday: "long",
+                    day: "numeric",
+                    month: "long",
+                  })}
+                </span>
+                <span className="text-emerald-500/60 font-mono text-xs">
+                  {displayData
+                    ? `${displayData.date.hijri.day} ${displayData.date.hijri.month.en} ${displayData.date.hijri.year}`
+                    : "Loading..."}
                 </span>
               </div>
             </div>
@@ -329,47 +348,6 @@ export default function PrayersPage() {
                 </button>
               </div>
             </div>
-          </div>
-
-          {/* Date Navigator */}
-          <div className="flex items-center justify-between bg-white/5 p-2 rounded-2xl border border-white/5 backdrop-blur-md">
-            <button
-              onClick={() => handleNavigate(-1)}
-              className="p-2 hover:bg-emerald-500/20 rounded-xl text-emerald-300 transition-colors"
-            >
-              <ChevronLeft className="size-5" />
-            </button>
-
-            <div className="text-center">
-              <span className="block text-emerald-100 font-medium">
-                {selectedDate.toLocaleDateString("en-GB", {
-                  weekday: "long",
-                  day: "numeric",
-                  month: "long",
-                })}
-              </span>
-              <AnimatePresence mode="wait">
-                <motion.span
-                  key={
-                    displayData?.date.hijri.date || selectedDate.toISOString()
-                  }
-                  initial={{ opacity: 0, y: 5 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="block text-xs text-emerald-500/60 font-mono"
-                >
-                  {displayData
-                    ? `${displayData.date.hijri.day} ${displayData.date.hijri.month.en} ${displayData.date.hijri.year}`
-                    : "Loading..."}
-                </motion.span>
-              </AnimatePresence>
-            </div>
-
-            <button
-              onClick={() => handleNavigate(1)}
-              className="p-2 hover:bg-emerald-500/20 rounded-xl text-emerald-300 transition-colors"
-            >
-              <ChevronRight className="size-5" />
-            </button>
           </div>
         </div>
 
@@ -423,7 +401,19 @@ export default function PrayersPage() {
             initial="enter"
             animate="center"
             exit="exit"
-            className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3"
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.2}
+            onDragEnd={(_e, { offset, velocity }) => {
+              const swipe = swipePower(offset.x, velocity.x);
+
+              if (swipe < -swipeConfidenceThreshold) {
+                handleNavigate(1);
+              } else if (swipe > swipeConfidenceThreshold) {
+                handleNavigate(-1);
+              }
+            }}
+            className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 touch-pan-y"
           >
             {displayData ? (
               PRAYER_NAMES.map((prayer) => {
@@ -442,7 +432,7 @@ export default function PrayersPage() {
                   <div
                     key={prayer.key}
                     className={cn(
-                      "flex items-center justify-between p-4 rounded-2xl border transition-all duration-300",
+                      "flex items-center justify-between p-4 rounded-2xl border transition-all duration-300 select-none",
                       isActive
                         ? "bg-emerald-500/20 border-emerald-500/50 shadow-[0_0_30px_-5px_rgba(16,185,129,0.3)]"
                         : "bg-white/5 border-white/5 hover:bg-white/10",
