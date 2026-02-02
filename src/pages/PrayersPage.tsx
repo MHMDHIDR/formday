@@ -287,12 +287,12 @@ export default function PrayersPage() {
         <div className="absolute bottom-[-10%] left-[-20%] w-[500px] h-[500px] bg-teal-600/10 rounded-full blur-[100px]" />
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 pt-6">
+      <div className="relative z-10 container mx-auto px-4 pt-16 pb-10">
         {/* Header with Navigation */}
         <div className="flex flex-col gap-6 mb-8">
           <div className="flex justify-between items-start">
             <div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-emerald-200 to-teal-400 bg-clip-text text-transparent">
+              <h1 className="text-3xl font-bold bg-linear-to-r from-emerald-200 to-teal-400 bg-clip-text text-transparent">
                 Prayer Times
               </h1>
               <div className="flex items-center gap-2 text-emerald-400/80 mt-1 text-sm">
@@ -363,7 +363,7 @@ export default function PrayersPage() {
               exit={{ opacity: 0, height: 0 }}
               className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 sm:p-8 mb-8 relative overflow-hidden group"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="absolute inset-0 bg-linear-to-br from-emerald-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
               <div className="relative z-10 flex flex-col items-center justify-center py-4">
                 {!displayData || isHookLoading ? (
@@ -467,15 +467,6 @@ export default function PrayersPage() {
             )}
           </motion.div>
         </AnimatePresence>
-
-        {/* Footer info */}
-        <div className="mt-12 text-center text-xs text-emerald-500/30">
-          <p>Data provided by Aladhan API</p>
-          <p className="mt-1">
-            {" "}
-            cached for {selectedDate.getFullYear()} • {city}, {country}
-          </p>
-        </div>
       </div>
 
       <AnimatePresence>
