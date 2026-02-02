@@ -334,7 +334,9 @@ export default function PrayersPage() {
                     className="flex items-center gap-1 px-3 py-2 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 rounded-xl transition-colors border border-emerald-500/20 text-xs font-bold active:scale-95"
                   >
                     {new Date().getDate()}/
-                    {new Date().toLocaleString("default", { month: "short" })}
+                    {new Date()
+                      .toLocaleString("default", { month: "short" })
+                      .toUpperCase()}
                   </motion.button>
                 )}
               </AnimatePresence>
