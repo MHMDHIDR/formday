@@ -88,24 +88,30 @@ export function usePrayerData() {
 
   // Helper to get today's prayer times from the yearly cache
   const getTodayPrayers = useCallback((): PrayerData | null => {
-    const today = new Date();
-    const month = (today.getMonth() + 1).toString(); // '1' to '12'
-    const day = today.getDate(); // 1 to 31
-
-    // API returns months as "1", "2"...
-    // And arrays are 0-indexed, so day 1 is index 0.
-    if (yearData && yearData[month]) {
-      const dayData = yearData[month][day - 1];
-      if (dayData) return dayData;
-    }
-    return null;
+    return getPrayerDataForDate(new Date());
   }, [yearData]);
+
+  const getPrayerDataForDate = useCallback(
+    (date: Date): PrayerData | null => {
+      if (!yearData) return null;
+      const month = (date.getMonth() + 1).toString(); // '1' to '12'
+      const day = date.getDate(); // 1 to 31
+
+      if (yearData[month]) {
+        const dayData = yearData[month][day - 1];
+        if (dayData) return dayData;
+      }
+      return null;
+    },
+    [yearData],
+  );
 
   return {
     yearData,
     isLoading,
     fetchValues,
     getTodayPrayers,
+    getPrayerDataForDate,
     lastFetched,
   };
 }
