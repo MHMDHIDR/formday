@@ -290,7 +290,7 @@ export default function PrayersPage() {
       <div className="relative z-10 container mx-auto px-4 pt-16 pb-10">
         {/* Header with Navigation */}
         <div className="flex flex-col gap-6 mb-8">
-          <div className="flex justify-between items-start">
+          <div className="flex justify-between items-center">
             <div>
               <h1 className="text-3xl font-bold bg-linear-to-r from-emerald-200 to-teal-400 bg-clip-text text-transparent">
                 Prayer Times
@@ -303,12 +303,31 @@ export default function PrayersPage() {
               </div>
             </div>
 
-            <button
-              onClick={() => setIsCalendarOpen(true)}
-              className="p-2 bg-white/5 hover:bg-white/10 rounded-xl transition-colors border border-white/5 active:scale-95"
-            >
-              <CalendarIcon className="size-5 text-emerald-300" />
-            </button>
+            <div className="flex gap-x-2.5">
+              <AnimatePresence>
+                {!isToday && (
+                  <motion.button
+                    initial={{ opacity: 0, x: 10, scale: 0.9 }}
+                    animate={{ opacity: 1, x: 0, scale: 1 }}
+                    exit={{ opacity: 0, x: 10, scale: 0.9 }}
+                    onClick={() => handleDateSelect(new Date())}
+                    className="flex items-center gap-1 px-3 py-2 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 rounded-xl transition-colors border border-emerald-500/20 text-xs font-bold active:scale-95"
+                  >
+                    {new Date().getDate()}/
+                    {new Date().toLocaleString("default", { month: "short" })}
+                  </motion.button>
+                )}
+              </AnimatePresence>
+
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setIsCalendarOpen(true)}
+                  className="p-2 bg-white/5 hover:bg-white/10 rounded-xl transition-colors border border-white/5 active:scale-95"
+                >
+                  <CalendarIcon className="size-5 text-emerald-300" />
+                </button>
+              </div>
+            </div>
           </div>
 
           {/* Date Navigator */}
