@@ -14,6 +14,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
+import { to12Hour } from "@/lib/to12Hours";
 
 // CONSTANT AS REQUESTED
 const API_URL =
@@ -473,7 +474,7 @@ export default function PrayersPage() {
                         isActive ? "text-white" : "text-emerald-200",
                       )}
                     >
-                      {cleanTime}
+                      {to12Hour(cleanTime)}
                     </span>
                   </div>
                 );
