@@ -13,6 +13,7 @@ import ProfilePage from "./pages/Profile";
 import OfflinePage from "./pages/Offline";
 import NotFoundPage from "./pages/NotFound";
 import PrayersPage from "./pages/PrayersPage";
+import { NotificationManager } from "./components/NotificationManager";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -40,6 +41,7 @@ function App() {
           <Route path="/offline" element={<OfflinePage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
+        <NotificationManager />
       </PWAProvider>
     </QueryClientProvider>
   );
