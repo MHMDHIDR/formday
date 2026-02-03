@@ -1,11 +1,17 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import { usePrayerData } from "./usePrayerData";
 import {
   sendNotification,
-  requestNotificationPermission,
+  NOTIFICATION_PERMISSION_GRANTED,
 } from "@/lib/notifications";
 
-const PRAYER_KEYS = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
+const PRAYER_KEYS = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"] as const;
+
+// Notification timing configuration (in minutes before prayer)
+const NOTIFICATION_MINUTES_BEFORE = 10;
+
+// Check interval in milliseconds (30 seconds for more responsive notifications)
+const CHECK_INTERVAL_MS = 30 * 1000;
 
 // Simple specialized reminders
 const REMINDERS = [
@@ -16,76 +22,226 @@ const REMINDERS = [
   "Pause your busy day for a spiritual recharge.",
 ];
 
-export function usePrayerNotifications() {
-  const { getTodayPrayers } = usePrayerData();
-  const lastCheckRef = useRef<number>(0);
+/**
+ * Parse prayer time string to Date object for today
+ * Handles formats like "05:52 (BST)" or "05:52"
+ */
+function parsePrayerTime(timeStr: string): Date | null {
+  if (!timeStr) return null;
 
-  useEffect(() => {
-    // Request permission on mount (or maybe we should do this on a user interaction button?
-    // sticking to simple for now, but usually better on interaction)
-    // For now, let's just ensure we log if we don't have it, but we won't force prompt aggressively
-    // on load unless the user has already interacted or we decide to.
-    // Let's rely on the user clicking a specific "Enable Notifications" button ideally,
-    // but the requirement said "add push notifications" - I'll let the user approve when they visit.
-    if ("Notification" in window && Notification.permission === "default") {
-      // Optional: Prompt immediately or wait for user action.
-      // I will prompt immediately for simplicity as requested.
-      requestNotificationPermission();
+  const timePart = timeStr.split(" ")[0];
+  const [hoursStr, minutesStr] = timePart.split(":");
+
+  const hours = parseInt(hoursStr, 10);
+  const minutes = parseInt(minutesStr, 10);
+
+  if (isNaN(hours) || isNaN(minutes)) {
+    console.warn("Failed to parse prayer time:", timeStr);
+    return null;
+  }
+
+  const prayerDate = new Date();
+  prayerDate.setHours(hours, minutes, 0, 0);
+
+  return prayerDate;
+}
+
+/**
+ * Get a unique storage key for tracking sent notifications
+ */
+function getNotificationStorageKey(
+  dateStr: string,
+  prayerName: string,
+): string {
+  return `prayer-notified-${dateStr}-${prayerName}`;
+}
+
+/**
+ * Check if notification was already sent for this prayer today
+ */
+function wasNotificationSent(dateStr: string, prayerName: string): boolean {
+  const key = getNotificationStorageKey(dateStr, prayerName);
+  return localStorage.getItem(key) === "true";
+}
+
+/**
+ * Mark notification as sent for this prayer today
+ */
+function markNotificationSent(dateStr: string, prayerName: string): void {
+  const key = getNotificationStorageKey(dateStr, prayerName);
+  localStorage.setItem(key, "true");
+}
+
+/**
+ * Clean up old notification keys (older than today)
+ * Keys are stored as: prayer-notified-{readable_date}-{prayerName}
+ * We remove any keys that don't contain today's date portion
+ */
+function cleanupOldNotificationKeys(): void {
+  // SSR safety check
+  if (typeof window === "undefined" || typeof localStorage === "undefined") {
+    return;
+  }
+
+  // Get today's date in the format used by the API (e.g., "03 Feb 2026")
+  const today = new Date();
+  const dayStr = today.getDate().toString().padStart(2, "0");
+  const monthNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  const monthStr = monthNames[today.getMonth()];
+  const yearStr = today.getFullYear().toString();
+  const todayPattern = `${dayStr} ${monthStr} ${yearStr}`;
+
+  try {
+    const keysToRemove: string[] = [];
+
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key?.startsWith("prayer-notified-") && !key.includes(todayPattern)) {
+        keysToRemove.push(key);
+      }
     }
 
-    const checkPrayers = () => {
-      const now = new Date();
-      // Avoid checking too frequently in the same minute
-      if (now.getTime() - lastCheckRef.current < 50000) return;
-      lastCheckRef.current = now.getTime();
+    keysToRemove.forEach((key) => localStorage.removeItem(key));
 
-      const todayData = getTodayPrayers();
-      if (!todayData) return;
+    if (keysToRemove.length > 0) {
+      console.log(
+        `Prayer notifications: Cleaned up ${keysToRemove.length} old notification keys`,
+      );
+    }
+  } catch (error) {
+    console.warn("Failed to cleanup old notification keys:", error);
+  }
+}
 
-      const timings = todayData.timings;
-      const dateStr = todayData.date.readable; // To mark unique notifications per day
+export function usePrayerNotifications() {
+  const { getTodayPrayers, yearData } = usePrayerData();
+  const lastCheckRef = useRef<number>(0);
+  const hasCleanedUpRef = useRef<boolean>(false);
 
-      PRAYER_KEYS.forEach((prayerName) => {
-        const timeStr = timings[prayerName as keyof typeof timings];
-        if (!timeStr) return;
+  // Memoize the check function to avoid recreating on every render
+  const checkPrayers = useCallback(() => {
+    // SSR safety check
+    if (typeof window === "undefined") {
+      return;
+    }
 
-        // Parse Prayer Time
-        // timeStr format example: "05:52 (BST)" or just "05:52"
-        const [hours, minutes] = timeStr.split(" ")[0].split(":").map(Number);
+    const now = new Date();
 
-        const prayerDate = new Date();
-        prayerDate.setHours(hours, minutes, 0, 0);
+    // Avoid checking too frequently (less than 20 seconds apart)
+    if (now.getTime() - lastCheckRef.current < 20000) {
+      return;
+    }
+    lastCheckRef.current = now.getTime();
 
-        const diffMinutes =
-          (prayerDate.getTime() - now.getTime()) / (1000 * 60);
+    // Only proceed if notifications are granted
+    if (
+      !("Notification" in window) ||
+      Notification.permission !== NOTIFICATION_PERMISSION_GRANTED
+    ) {
+      console.debug("Prayer notifications: Permission not granted");
+      return;
+    }
 
-        // Check if within 5-6 minutes window (using 6 to be safe for "5 min before")
-        // We want to notify exactly once when we enter the "5 minutes remaining" zone.
-        // Or simply: if diff is between 4 and 5 minutes.
-        if (diffMinutes > 0 && diffMinutes <= 5) {
-          const storageKey = `notified-${dateStr}-${prayerName}`;
-          const alreadyNotified = localStorage.getItem(storageKey);
+    const todayData = getTodayPrayers();
+    if (!todayData) {
+      console.debug("Prayer notifications: No prayer data available for today");
+      return;
+    }
 
-          if (!alreadyNotified) {
-            // Pick a random spiritual reminder
-            const reminder =
-              REMINDERS[Math.floor(Math.random() * REMINDERS.length)];
+    const timings = todayData.timings;
+    const dateStr = todayData.date.readable;
 
-            sendNotification(`Upcoming Prayer: ${prayerName}`, {
-              body: `${prayerName} is in ${Math.ceil(diffMinutes)} minutes. ${reminder}`,
-              tag: `prayer-${prayerName}`, // Ensures we don't spam multiple for same prayer if logic loops
-            });
+    console.debug("Prayer notifications: Checking prayers for", dateStr);
 
-            // Mark as done
-            localStorage.setItem(storageKey, "true");
-          }
+    PRAYER_KEYS.forEach((prayerName) => {
+      const timeStr = timings[prayerName];
+      if (!timeStr) {
+        console.debug(`Prayer notifications: No time found for ${prayerName}`);
+        return;
+      }
+
+      const prayerDate = parsePrayerTime(timeStr);
+      if (!prayerDate) return;
+
+      const diffMs = prayerDate.getTime() - now.getTime();
+      const diffMinutes = diffMs / (1000 * 60);
+
+      // Check if within notification window:
+      // - Prayer is in the future (diffMinutes > 0)
+      // - Prayer is within NOTIFICATION_MINUTES_BEFORE minutes
+      // We use a range to catch the notification even with check intervals
+      const shouldNotify =
+        diffMinutes > 0 && diffMinutes <= NOTIFICATION_MINUTES_BEFORE;
+
+      if (shouldNotify) {
+        if (wasNotificationSent(dateStr, prayerName)) {
+          console.debug(
+            `Prayer notifications: Already notified for ${prayerName}`,
+          );
+          return;
         }
-      });
-    };
 
-    const intervalId = setInterval(checkPrayers, 60 * 1000); // Check every minute
-    checkPrayers(); // Initial check
+        // Pick a random spiritual reminder
+        const reminder =
+          REMINDERS[Math.floor(Math.random() * REMINDERS.length)];
+        const minutesRemaining = Math.ceil(diffMinutes);
 
-    return () => clearInterval(intervalId);
+        console.log(
+          `Prayer notifications: Sending notification for ${prayerName} (${minutesRemaining} min away)`,
+        );
+
+        sendNotification(`🕌 ${prayerName} Prayer`, {
+          body: `${prayerName} is in ${minutesRemaining} minute${minutesRemaining !== 1 ? "s" : ""}.\n${reminder}`,
+          tag: `prayer-${prayerName}-${dateStr}`,
+        });
+
+        // Mark as done to prevent duplicate notifications
+        markNotificationSent(dateStr, prayerName);
+      }
+    });
   }, [getTodayPrayers]);
+
+  useEffect(() => {
+    // Clean up old notification keys once per session
+    if (!hasCleanedUpRef.current) {
+      cleanupOldNotificationKeys();
+      hasCleanedUpRef.current = true;
+    }
+
+    // Request permission if needed (most browsers require user gesture)
+    if ("Notification" in window && Notification.permission === "default") {
+      console.log(
+        "Prayer notifications: Permission is default, will prompt on user interaction",
+      );
+    }
+
+    // Initial check
+    checkPrayers();
+
+    // Set up interval for periodic checks
+    const intervalId = setInterval(checkPrayers, CHECK_INTERVAL_MS);
+
+    console.log(
+      `Prayer notifications: Started checking every ${CHECK_INTERVAL_MS / 1000}s, ` +
+        `notifications ${NOTIFICATION_MINUTES_BEFORE} minutes before prayer`,
+    );
+
+    return () => {
+      clearInterval(intervalId);
+      console.log("Prayer notifications: Stopped checking");
+    };
+  }, [checkPrayers, yearData]); // yearData dependency ensures we re-run when prayer data loads
 }

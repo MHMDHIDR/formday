@@ -3,15 +3,25 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import "./styles/globals.css";
+import { registerSW } from "virtual:pwa-register";
 
-// Register service worker
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("/sw.js").catch(() => {
-      // Service worker registration failed - app still works without offline support
-    });
-  });
-}
+// Register service worker using VitePWA's virtual module
+// This enables automatic updates and proper background notification support
+registerSW({
+  onNeedRefresh() {
+    // Optional: prompt user to refresh for new version
+    console.log("New content available, refresh to update.");
+  },
+  onOfflineReady() {
+    console.log("App ready to work offline.");
+  },
+  onRegistered(registration: ServiceWorkerRegistration | undefined) {
+    console.log("Service Worker registered:", registration);
+  },
+  onRegisterError(error: Error) {
+    console.error("Service Worker registration error:", error);
+  },
+});
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
