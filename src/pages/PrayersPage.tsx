@@ -381,7 +381,7 @@ export default function PrayersPage() {
                         : "Next Prayer"}
                     </h2>
                     <div className="text-6xl sm:text-7xl font-bold text-white mb-2 tracking-tighter">
-                      {nextPrayer?.time}
+                      {to12Hour(nextPrayer?.time || "")}
                     </div>
                     <div className="flex items-center gap-2 bg-emerald-500/20 px-4 py-1.5 rounded-full text-emerald-300">
                       {nextPrayer && <nextPrayer.icon className="size-4" />}
