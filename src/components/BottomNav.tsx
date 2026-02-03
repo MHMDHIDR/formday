@@ -22,7 +22,7 @@ export function BottomNav() {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-lg border-t border-border safe-area-inset">
-      <div className="relative flex items-center justify-around px-2 py-2">
+      <div className="relative flex items-center justify-around px-2 py-1">
         {navItems.map((item) => {
           // Handle potential null pathname
           const currentPath = pathname || "";
@@ -35,7 +35,7 @@ export function BottomNav() {
               key={item.to}
               to={item.to}
               className={cn(
-                "relative flex flex-col items-center gap-1 px-4 py-2 rounded-2xl z-10",
+                "relative flex flex-col items-center gap-1 px-4 py-1 rounded-2xl z-10",
                 "tap-target transition-all duration-300",
                 "focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:ring-offset-2",
               )}
@@ -67,11 +67,11 @@ export function BottomNav() {
                   stiffness: 500,
                   damping: 30,
                 }}
-                whileTap={{ scale: 0.92 }}
+                whileTap={{ scale: 0.9 }}
               >
                 <item.icon
                   className={cn(
-                    "w-5 h-5 transition-all duration-300",
+                    "size-4 transition-all duration-300",
                     isActive
                       ? "text-green-700 drop-shadow-sm"
                       : "text-muted-foreground",
@@ -103,7 +103,7 @@ export function BottomNav() {
               <AnimatePresence>
                 {isActive && (
                   <motion.div
-                    className="absolute -bottom-1 w-1.5 h-1.5 rounded-full bg-green-600"
+                    className="absolute -bottom-1 size-1.5 rounded-full bg-green-600"
                     initial={{ scale: 0, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     exit={{ scale: 0, opacity: 0 }}

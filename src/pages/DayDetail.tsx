@@ -84,7 +84,7 @@ export default function DayDetailPage() {
               whileTap={{ scale: 0.95 }}
               onClick={navigateBack}
             >
-              <ChevronLeft className="w-5 h-5" />
+              <ChevronLeft className="size-5" />
             </motion.button>
 
             <div className="flex-1">

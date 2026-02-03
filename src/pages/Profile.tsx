@@ -2,7 +2,8 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useFitnessData } from "@/hooks/useFitnessData";
 import { BottomNav } from "@/components/BottomNav";
-import { User, Mail, Save, Check } from "lucide-react";
+import { User, Mail, Save, Check, Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -19,6 +20,7 @@ const itemVariants = {
 
 const ProfilePage = () => {
   const { profile, setProfile } = useFitnessData();
+  const { theme, setTheme } = useTheme();
   const [name, setName] = useState(profile.name);
   const [email, setEmail] = useState(profile.email);
   const [saved, setSaved] = useState(false);
@@ -35,7 +37,7 @@ const ProfilePage = () => {
       <header className="sticky top-0 z-40 bg-background/95 backdrop-blur-lg border-b border-border">
         <div className="container mx-auto py-4 px-2">
           <h1 className="text-2xl font-bold flex items-center gap-2">
-            <User className="size-6 text-accent" />
+            <User className="size-6 text-primary" />
             Profile
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
@@ -90,6 +92,43 @@ const ProfilePage = () => {
                   placeholder="Enter your email"
                 />
               </div>
+
+              {/* Theme Toggle */}
+              <div className="pt-2 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="p-2 rounded-full bg-secondary text-foreground">
+                    {theme === "dark" ? (
+                      <Moon className="size-5" />
+                    ) : (
+                      <Sun className="size-5" />
+                    )}
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-medium text-foreground">
+                      Appearance
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      {theme === "dark" ? "Dark mode" : "Light mode"}
+                    </span>
+                  </div>
+                </div>
+
+                <div
+                  onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                  className={`w-14 h-8 rounded-full flex items-center p-1 cursor-pointer transition-colors duration-300 ${
+                    theme === "dark" ? "bg-primary" : "bg-secondary"
+                  }`}
+                >
+                  <motion.div
+                    className="w-6 h-6 bg-white rounded-full shadow-md"
+                    layout
+                    transition={{ type: "spring", stiffness: 700, damping: 30 }}
+                    animate={{
+                      x: theme === "dark" ? 24 : 0,
+                    }}
+                  />
+                </div>
+              </div>
             </div>
 
             {/* Save Button */}
@@ -101,12 +140,12 @@ const ProfilePage = () => {
             >
               {saved ? (
                 <>
-                  <Check className="w-5 h-5" />
+                  <Check className="size-5" />
                   Saved!
                 </>
               ) : (
                 <>
-                  <Save className="w-5 h-5" />
+                  <Save className="size-5" />
                   Save Changes
                 </>
               )}

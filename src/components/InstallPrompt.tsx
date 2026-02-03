@@ -28,7 +28,7 @@ export function InstallPrompt() {
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 rounded-xl bg-gradient-accent flex items-center justify-center shrink-0">
-                    <Download className="w-6 h-6 text-accent-foreground" />
+                    <Download className="size-6 text-accent-foreground" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-foreground">
@@ -43,7 +43,7 @@ export function InstallPrompt() {
                   onClick={dismiss}
                   className="p-1 hover:bg-secondary rounded-lg transition-colors"
                 >
-                  <X className="w-4 h-4 text-muted-foreground" />
+                  <X className="size-4 text-muted-foreground" />
                 </button>
               </div>
               <motion.button
@@ -51,7 +51,7 @@ export function InstallPrompt() {
                 className="mt-3 w-full p-3 rounded-xl bg-gradient-accent text-accent-foreground font-medium flex items-center justify-center gap-2"
                 whileTap={{ scale: 0.98 }}
               >
-                <Share className="w-4 h-4" />
+                <Share className="size-4" />
                 Show Instructions
               </motion.button>
             </div>
@@ -79,7 +79,7 @@ export function InstallPrompt() {
                   }}
                   className="p-1 hover:bg-secondary rounded-lg transition-colors"
                 >
-                  <X className="w-5 h-5 text-muted-foreground" />
+                  <X className="size-5 text-muted-foreground" />
                 </button>
               </div>
 
@@ -93,8 +93,8 @@ export function InstallPrompt() {
                       Tap the Share button
                     </p>
                     <p className="text-sm text-muted-foreground flex items-center gap-1">
-                      Look for <Share className="w-4 h-4 inline" /> at the
-                      bottom of Safari
+                      Look for <Share className="size-4 inline" /> at the bottom
+                      of Safari
                     </p>
                   </div>
                 </li>
@@ -107,8 +107,8 @@ export function InstallPrompt() {
                       Select "Add to Home Screen"
                     </p>
                     <p className="text-sm text-muted-foreground flex items-center gap-1">
-                      Scroll down and tap <Plus className="w-4 h-4 inline" />{" "}
-                      Add to Home Screen
+                      Scroll down and tap <Plus className="size-4 inline" /> Add
+                      to Home Screen
                     </p>
                   </div>
                 </li>
@@ -158,7 +158,7 @@ export function InstallPrompt() {
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-xl bg-gradient-accent flex items-center justify-center shrink-0">
-              <Download className="w-6 h-6 text-accent-foreground" />
+              <Download className="size-6 text-accent-foreground" />
             </div>
             <div>
               <h3 className="font-semibold text-foreground">Install Formday</h3>
@@ -171,7 +171,7 @@ export function InstallPrompt() {
             onClick={dismiss}
             className="p-1 hover:bg-secondary rounded-lg transition-colors"
           >
-            <X className="w-4 h-4 text-muted-foreground" />
+            <X className="size-4 text-muted-foreground" />
           </button>
         </div>
         <div className="mt-3 flex gap-2">
@@ -180,7 +180,7 @@ export function InstallPrompt() {
             className="flex-1 p-3 rounded-xl bg-gradient-accent text-accent-foreground font-medium flex items-center justify-center gap-2"
             whileTap={{ scale: 0.98 }}
           >
-            <Download className="w-4 h-4" />
+            <Download className="size-4" />
             Install
           </motion.button>
           <motion.button

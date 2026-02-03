@@ -56,19 +56,19 @@ export default function OfflinePage() {
           </h3>
           <ul className="space-y-2 text-sm text-muted-foreground">
             <li className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-success" />
+              <span className="size-2 rounded-full bg-success" />
               View and edit workouts
             </li>
             <li className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-success" />
+              <span className="size-2 rounded-full bg-success" />
               Track your meals
             </li>
             <li className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-success" />
+              <span className="size-2 rounded-full bg-success" />
               Check your progress
             </li>
             <li className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-success" />
+              <span className="size-2 rounded-full bg-success" />
               View analytics
             </li>
           </ul>
@@ -82,7 +82,7 @@ export default function OfflinePage() {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
-            <RefreshCw className="w-5 h-5" />
+            <RefreshCw className="size-5" />
             Try Again
           </motion.button>
 
@@ -92,7 +92,7 @@ export default function OfflinePage() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
-              <Home className="w-5 h-5" />
+              <Home className="size-5" />
               Go to Home
             </motion.button>
           </Link>

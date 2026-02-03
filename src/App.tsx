@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { PWAProvider } from "./components/PWAProvider";
+import { ThemeProvider } from "next-themes";
 
 // Pages
 import HomePage from "./pages/Home";
@@ -28,21 +29,23 @@ const queryClient = new QueryClient({
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <PWAProvider>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/day/:dateString" element={<DayDetailPage />} />
-          <Route path="/calendar" element={<CalendarPage />} />
-          <Route path="/prayers" element={<PrayersPage />} />
-          <Route path="/workout" element={<WorkoutPage />} />
-          <Route path="/meals" element={<MealsPage />} />
-          <Route path="/analytics" element={<AnalyticsPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/offline" element={<OfflinePage />} />
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-        <NotificationManager />
-      </PWAProvider>
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <PWAProvider>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/day/:dateString" element={<DayDetailPage />} />
+            <Route path="/calendar" element={<CalendarPage />} />
+            <Route path="/prayers" element={<PrayersPage />} />
+            <Route path="/workout" element={<WorkoutPage />} />
+            <Route path="/meals" element={<MealsPage />} />
+            <Route path="/analytics" element={<AnalyticsPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/offline" element={<OfflinePage />} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+          <NotificationManager />
+        </PWAProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }

@@ -111,7 +111,7 @@ export default function CalendarPage() {
               whileTap={{ scale: 0.95 }}
               onClick={goToPreviousMonth}
             >
-              <ChevronLeft className="w-5 h-5" />
+              <ChevronLeft className="size-5" />
             </motion.button>
 
             <h1 className="text-xl font-bold">
@@ -123,7 +123,7 @@ export default function CalendarPage() {
               whileTap={{ scale: 0.95 }}
               onClick={goToNextMonth}
             >
-              <ChevronRight className="w-5 h-5" />
+              <ChevronRight className="size-5" />
             </motion.button>
           </div>
         </div>
@@ -205,7 +205,7 @@ export default function CalendarPage() {
                       (status.isComplete ? (
                         <Check className="size-3 text-success" />
                       ) : status.completion > 0 ? (
-                        <Circle className="w-2 h-2 text-warning fill-warning" />
+                        <Circle className="size-2 text-warning fill-warning" />
                       ) : null)}
                   </div>
                 </motion.button>

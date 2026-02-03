@@ -208,7 +208,7 @@ export default function AnalyticsPage() {
           <motion.div variants={itemVariants}>
             <div className="p-4 rounded-2xl bg-card shadow-card">
               <div className="flex items-center gap-2 mb-4">
-                <TrendingUp className="w-5 h-5 text-muted-foreground" />
+                <TrendingUp className="size-5 text-muted-foreground" />
                 <h3 className="font-semibold">Completion Trend</h3>
               </div>
 
@@ -327,7 +327,7 @@ export default function AnalyticsPage() {
           <motion.div variants={itemVariants}>
             <div className="p-4 rounded-2xl bg-card shadow-card">
               <div className="flex items-center gap-2 mb-3">
-                <Calendar className="w-5 h-5 text-muted-foreground" />
+                <Calendar className="size-5 text-muted-foreground" />
                 <h3 className="font-semibold">Summary</h3>
               </div>
               <p className="text-muted-foreground">

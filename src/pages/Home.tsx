@@ -116,7 +116,7 @@ export default function HomePage() {
               whileTap={{ scale: 0.95 }}
               onClick={() => navigate("/profile")}
             >
-              <User className="w-5 h-5 text-secondary-foreground" />
+              <User className="size-5 text-secondary-foreground" />
             </motion.button>
           </motion.div>
         </div>
